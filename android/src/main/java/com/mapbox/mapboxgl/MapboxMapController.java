@@ -554,6 +554,7 @@ final class MapboxMapController
       Expression filter) {
     RasterLayer layer = new RasterLayer(layerName, sourceName);
     layer.setProperties(properties);
+    
     if (minZoom != null) {
       layer.setMinZoom(minZoom);
     }
