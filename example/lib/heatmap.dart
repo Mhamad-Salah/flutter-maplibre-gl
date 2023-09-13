@@ -32,7 +32,7 @@ class HeatmapState extends State {
       myLocationEnabled: true,
       onMapCreated: _onMapCreated,
       // onMapClick: (point, latLong) =>
-      //     print(point.toString() + latLong.toString()),
+      // print(point.toString() + latLong.toString()),
       onStyleLoadedCallback: _onStyleLoadedCallback,
       initialCameraPosition: CameraPosition(
         target: center,

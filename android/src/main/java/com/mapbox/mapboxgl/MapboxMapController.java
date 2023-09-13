@@ -1671,12 +1671,14 @@ final class MapboxMapController
       return;
     }
 
+    mapView.onStop();
+    mapView.onDestroy();
+
     if (locationComponent != null) {
       locationComponent.setLocationComponentEnabled(false);
     }
     stopListeningForLocationUpdates();
 
-    mapView.onDestroy();
     mapView = null;
   }
 
