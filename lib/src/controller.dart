@@ -430,20 +430,24 @@ class MaplibreMapController extends ChangeNotifier {
       double? maxRadius,
       double? minOpacity,
       double? maxOpacity}) async {
-    await _mapboxGlPlatform.addHeatmapLayer(
-      layerId,
-      sourceId,
-      minZoom: minZoom,
-      maxZoom: maxZoom,
-      minWeight: minWeight,
-      maxWeight: maxWeight,
-      minIntensity: minIntensity,
-      maxIntensity: maxIntensity,
-      minRadius: minRadius,
-      maxRadius: maxRadius,
-      minOpacity: minOpacity,
-      maxOpacity: maxOpacity,
-    );
+    try {
+      await _mapboxGlPlatform.addHeatmapLayer(
+        layerId,
+        sourceId,
+        minZoom: minZoom,
+        maxZoom: maxZoom,
+        minWeight: minWeight,
+        maxWeight: maxWeight,
+        minIntensity: minIntensity,
+        maxIntensity: maxIntensity,
+        minRadius: minRadius,
+        maxRadius: maxRadius,
+        minOpacity: minOpacity,
+        maxOpacity: maxOpacity,
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 
   //=======

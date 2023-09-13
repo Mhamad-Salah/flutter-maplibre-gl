@@ -11,18 +11,11 @@ dependencies:
       url: https://github.com/Mhamad-Salah/flutter-maplibre-gl.git
       path: maplibre_gl_platform_interface
       ref: heatmap
-  maplibre_gl_web:
-    git:
-      url: https://github.com/Mhamad-Salah/flutter-maplibre-gl.git
-      path: maplibre_gl_web
-      ref: heatmap
 
 dependency_overrides:
   maplibre_gl_platform_interface:
     path: ./maplibre_gl_platform_interface
-  maplibre_gl_web:
-    path: ./maplibre_gl_web
-
+    
 flutter:
   plugin:
     platforms:

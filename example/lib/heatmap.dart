@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/mapbox_gl.dart';
 import 'package:maplibre_gl_example/page.dart';
@@ -46,27 +44,13 @@ class HeatmapState extends State {
 
   void _onMapCreated(MaplibreMapController controller) {
     this.controller = controller;
-
-    controller.onFeatureTapped.add(onFeatureTap);
-  }
-
-  void onFeatureTap(dynamic featureId, Point<double> point, LatLng latLng) {
-    final snackBar = SnackBar(
-      content: Text(
-        'Tapped feature with id $featureId',
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-      backgroundColor: Theme.of(context).primaryColor,
-    );
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void _onStyleLoadedCallback() async {
     await controller.addGeoJsonSource("points", _points);
 
     await controller.addHeatmapLayer(
-      'ss',
+      'heatmap',
       'points',
     );
   }

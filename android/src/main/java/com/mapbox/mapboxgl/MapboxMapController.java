@@ -1012,6 +1012,7 @@ final class MapboxMapController
           minOpacity != null ? minOpacity.floatValue() : null,
           maxOpacity != null ? maxOpacity.floatValue() : null
           );
+          break;
         }  
       case "symbolLayer#add":
         {
@@ -1022,6 +1023,7 @@ final class MapboxMapController
           final Double minzoom = call.argument("minzoom");
           final Double maxzoom = call.argument("maxzoom");
           final String filter = call.argument("filter");
+          
           final boolean enableInteraction = call.argument("enableInteraction");
           final PropertyValue[] properties =
               LayerPropertyConverter.interpretSymbolLayerProperties(call.argument("properties"));
