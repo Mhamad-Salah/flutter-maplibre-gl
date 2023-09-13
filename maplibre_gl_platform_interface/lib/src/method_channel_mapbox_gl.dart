@@ -697,6 +697,32 @@ class MethodChannelMaplibreGl extends MapLibreGlPlatform {
   }
 
   @override
+  Future<void> addHeatmapLayer(String layerId, String sourceId,
+      {double? minZoom,
+      double? maxZoom,
+      double? minWeight,
+      double? maxWeight,
+      double? minIntensity,
+      double? maxIntensity,
+      double? minRadius,
+      double? maxRadius,
+      double? minOpacity,
+      double? maxOpacity}) async {
+    await _channel.invokeMethod('heatmapLayer#add', <String, dynamic>{
+      'layerId': layerId,
+      'sourceId': sourceId,
+      'minZoom': minZoom,
+      'maxZoom': maxZoom,
+      'minIntensity': minIntensity,
+      'maxIntensity': maxIntensity,
+      'minRadius': minRadius,
+      'maxRadius': maxRadius,
+      'minOpacity': minOpacity,
+      'maxOpacity': maxOpacity,
+    });
+  }
+
+  @override
   void dispose() {
     super.dispose();
     _channel.setMethodCallHandler(null);

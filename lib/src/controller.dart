@@ -418,6 +418,36 @@ class MaplibreMapController extends ChangeNotifier {
     );
   }
 
+  //=======
+  Future<void> addHeatmapLayer(String layerId, String sourceId,
+      {double? minZoom,
+      double? maxZoom,
+      double? minWeight,
+      double? maxWeight,
+      double? minIntensity,
+      double? maxIntensity,
+      double? minRadius,
+      double? maxRadius,
+      double? minOpacity,
+      double? maxOpacity}) async {
+    await _mapboxGlPlatform.addHeatmapLayer(
+      layerId,
+      sourceId,
+      minZoom: minZoom,
+      maxZoom: maxZoom,
+      minWeight: minWeight,
+      maxWeight: maxWeight,
+      minIntensity: minIntensity,
+      maxIntensity: maxIntensity,
+      minRadius: minRadius,
+      maxRadius: maxRadius,
+      minOpacity: minOpacity,
+      maxOpacity: maxOpacity,
+    );
+  }
+
+  //=======
+
   /// Add a fill layer to the map with the given properties
   ///
   /// Consider using [addLayer] for an unified layer api.

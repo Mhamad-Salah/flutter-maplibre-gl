@@ -1050,4 +1050,20 @@ class MaplibreMapController extends MapLibreGlPlatform
   Future<List> getSourceIds() async {
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> addHeatmapLayer(String layerId, String sourceId,
+      {double? minZoom,
+      double? maxZoom,
+      double? minWeight,
+      double? maxWeight,
+      double? minIntensity,
+      double? maxIntensity,
+      double? minRadius,
+      double? maxRadius,
+      double? minOpacity,
+      double? maxOpacity}) {
+    // TODO: implement addHeatmapLayer
+    throw UnimplementedError();
+  }
 }

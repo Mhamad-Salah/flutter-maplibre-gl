@@ -4,6 +4,20 @@
 
 package com.mapbox.mapboxgl;
 
+import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.heatmapDensity;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.linear;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.rgb;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.rgba;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapIntensity;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapOpacity;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapRadius;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.heatmapWeight;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -554,7 +568,7 @@ final class MapboxMapController
       Expression filter) {
     RasterLayer layer = new RasterLayer(layerName, sourceName);
     layer.setProperties(properties);
-    
+
     if (minZoom != null) {
       layer.setMinZoom(minZoom);
     }
@@ -567,6 +581,82 @@ final class MapboxMapController
       style.addLayer(layer);
     }
   }
+
+  private void addHeatmapLayer(
+  String layerId, 
+  String sourceId, 
+  Float minZoom,
+  Float maxZoom,
+  Float minWeight,
+  Float maxWeight,
+  Float minIntensity,
+  Float maxIntensity,
+  Float minRadius,
+  Float maxRadius,
+  Float minOpacity,
+  Float maxOpacity
+  ) {
+    HeatmapLayer layer = new HeatmapLayer(layerId, sourceId);
+
+    layer.setProperties(
+        // Increase the heatmap weight based on frequency and property magnitude
+        heatmapWeight(
+            interpolate(
+                linear(),
+                get("mag"),
+                literal(0), literal(minWeight != null ? minWeight : 0),
+                literal(6), literal(maxWeight != null ? maxWeight : 1)
+            )
+        ),
+        // Increase the heatmap color weight weight by zoom level
+        // heatmap-intensity is a multiplier on top of heatmap-weight
+        heatmapIntensity(
+            interpolate(
+                linear(),
+                zoom(),
+                literal(minZoom != null ? minZoom : 10), literal(minIntensity != null ? minIntensity : 1),
+                literal(maxZoom != null ? maxZoom : 15), literal(maxIntensity != null ? maxIntensity : 3)
+            )
+        ),
+        // Color ramp for heatmap. Domain is 0 (low) to 1 (high).
+        // Begin color ramp at 0-stop with a 0-transparency color
+        // to create a blur-like effect.
+        heatmapColor(
+            interpolate(
+                linear(),
+                heatmapDensity(),
+                literal(0), rgba(33, 102, 172, 0),
+                literal(0.2), rgb(103, 169, 207),
+                literal(0.4), rgb(209, 229, 240),
+                literal(0.6), rgb(253, 219, 199),
+                literal(0.8), rgb(252, 163, 100),
+                literal(1), rgb(255, 141, 61)
+            )
+        ),
+        // Adjust the heatmap radius by zoom level
+        heatmapRadius(
+            interpolate(
+                linear(),
+                zoom(),
+                literal(minZoom != null ? minZoom : 10), literal(minRadius != null ? minRadius : 30),
+                literal(maxZoom != null ? maxZoom : 15), literal(maxRadius != null ? maxRadius : 50)
+            )
+        ),
+        // Transition from heatmap to circle layer by zoom level
+        heatmapOpacity(
+            interpolate(
+                linear(),
+                zoom(),
+                literal(minZoom != null ? minZoom : 10), literal(minOpacity != null ? minOpacity : 1),
+                literal(maxZoom != null ? maxZoom : 15), literal(maxOpacity != null ? maxOpacity : 0)
+            )
+        )
+    );
+
+    // Add the heatmap layer to the map
+    style.addLayer(layer);
+}
+
 
   private void addHillshadeLayer(
       String layerName,
@@ -894,6 +984,35 @@ final class MapboxMapController
           result.success(null);
           break;
         }
+      case "heatmapLayer#add":
+        {
+          final String sourceId = call.argument("sourceId");
+          final String layerId = call.argument("layerId");
+          final Double minZoom = call.argument("minZoom");
+          final Double maxZoom = call.argument("maxZoom");
+          final Double minWeight = call.argument("minWeight");
+          final Double maxWeight = call.argument("maxWeight");
+          final Double minIntensity = call.argument("minIntensity");
+          final Double maxIntensity = call.argument("maxIntensity");
+          final Double minOpacity = call.argument("minOpacity");
+          final Double maxOpacity = call.argument("maxOpacity");
+          final Double minRadius = call.argument("minRadius");
+          final Double maxRadius = call.argument("maxRadius");
+
+          addHeatmapLayer(layerId, 
+          sourceId,
+          minZoom != null ? minZoom.floatValue() : null,
+          maxZoom != null ? maxZoom.floatValue() : null,
+          minWeight != null ? minWeight.floatValue() : null,
+          maxWeight != null ? maxWeight.floatValue() : null,
+          minIntensity != null ? minIntensity.floatValue() : null,
+          maxIntensity != null ? maxIntensity.floatValue() : null,
+          minRadius != null ? minRadius.floatValue() : null,
+          maxRadius != null ? maxRadius.floatValue() : null,
+          minOpacity != null ? minOpacity.floatValue() : null,
+          maxOpacity != null ? maxOpacity.floatValue() : null
+          );
+        }  
       case "symbolLayer#add":
         {
           final String sourceId = call.argument("sourceId");
