@@ -594,7 +594,8 @@ final class MapboxMapController
   Float minRadius,
   Float maxRadius,
   Float minOpacity,
-  Float maxOpacity
+  Float maxOpacity,
+  Float maxVisibleZoom
   ) {
     HeatmapLayer layer = new HeatmapLayer(layerId, sourceId);
 
@@ -652,6 +653,9 @@ final class MapboxMapController
             )
         )
     );
+
+      layer.setMaxZoom(maxVisibleZoom != null ? maxVisibleZoom : 13);
+
 
     // Add the heatmap layer to the map
     style.addLayer(layer);
@@ -998,6 +1002,7 @@ final class MapboxMapController
           final Double maxOpacity = call.argument("maxOpacity");
           final Double minRadius = call.argument("minRadius");
           final Double maxRadius = call.argument("maxRadius");
+          final Double maxVisibleZoom = call.argument("maxVisibleZoom");
 
           addHeatmapLayer(layerId, 
           sourceId,
@@ -1010,7 +1015,8 @@ final class MapboxMapController
           minRadius != null ? minRadius.floatValue() : null,
           maxRadius != null ? maxRadius.floatValue() : null,
           minOpacity != null ? minOpacity.floatValue() : null,
-          maxOpacity != null ? maxOpacity.floatValue() : null
+          maxOpacity != null ? maxOpacity.floatValue() : null,
+          maxVisibleZoom != null ? maxVisibleZoom.floatValue() : null
           );
           break;
         }  

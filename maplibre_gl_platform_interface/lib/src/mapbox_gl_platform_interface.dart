@@ -123,17 +123,21 @@ abstract class MapLibreGlPlatform {
 
   Future<void> removeSource(String sourceId);
 
-  Future<void> addHeatmapLayer(String layerId, String sourceId,
-      {double? minZoom,
-      double? maxZoom,
-      double? minWeight,
-      double? maxWeight,
-      double? minIntensity,
-      double? maxIntensity,
-      double? minRadius,
-      double? maxRadius,
-      double? minOpacity,
-      double? maxOpacity});
+  Future<void> addHeatmapLayer(
+    String layerId,
+    String sourceId, {
+    double? minZoom,
+    double? maxZoom,
+    double? minWeight,
+    double? maxWeight,
+    double? minIntensity,
+    double? maxIntensity,
+    double? minRadius,
+    double? maxRadius,
+    double? minOpacity,
+    double? maxOpacity,
+    double? maxVisibleZoom,
+  });
 
   Future<void> addSymbolLayer(
       String sourceId, String layerId, Map<String, dynamic> properties,

@@ -419,17 +419,21 @@ class MaplibreMapController extends ChangeNotifier {
   }
 
   //=======
-  Future<void> addHeatmapLayer(String layerId, String sourceId,
-      {double? minZoom,
-      double? maxZoom,
-      double? minWeight,
-      double? maxWeight,
-      double? minIntensity,
-      double? maxIntensity,
-      double? minRadius,
-      double? maxRadius,
-      double? minOpacity,
-      double? maxOpacity}) async {
+  Future<void> addHeatmapLayer(
+    String layerId,
+    String sourceId, {
+    double? minZoom,
+    double? maxZoom,
+    double? minWeight,
+    double? maxWeight,
+    double? minIntensity,
+    double? maxIntensity,
+    double? minRadius,
+    double? maxRadius,
+    double? minOpacity,
+    double? maxOpacity,
+    double? maxVisibleZoom,
+  }) async {
     try {
       await _mapboxGlPlatform.addHeatmapLayer(
         layerId,
@@ -444,6 +448,7 @@ class MaplibreMapController extends ChangeNotifier {
         maxRadius: maxRadius,
         minOpacity: minOpacity,
         maxOpacity: maxOpacity,
+        maxVisibleZoom: maxVisibleZoom,
       );
     } catch (e) {
       print(e);

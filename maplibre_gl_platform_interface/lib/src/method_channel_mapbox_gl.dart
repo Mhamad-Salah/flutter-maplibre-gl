@@ -707,7 +707,8 @@ class MethodChannelMaplibreGl extends MapLibreGlPlatform {
       double? minRadius,
       double? maxRadius,
       double? minOpacity,
-      double? maxOpacity}) async {
+      double? maxOpacity,
+      double? maxVisibleZoom}) async {
     await _channel.invokeMethod('heatmapLayer#add', <String, dynamic>{
       'layerId': layerId,
       'sourceId': sourceId,
@@ -719,6 +720,7 @@ class MethodChannelMaplibreGl extends MapLibreGlPlatform {
       'maxRadius': maxRadius,
       'minOpacity': minOpacity,
       'maxOpacity': maxOpacity,
+      'maxVisibleZoom': maxVisibleZoom,
     });
   }
 

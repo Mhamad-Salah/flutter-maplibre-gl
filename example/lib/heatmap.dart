@@ -52,6 +52,9 @@ class HeatmapState extends State {
     await controller.addHeatmapLayer(
       'heatmap',
       'points',
+      maxOpacity: 1,
+      minOpacity: 1,
+      maxVisibleZoom: 15,
     );
   }
 }
