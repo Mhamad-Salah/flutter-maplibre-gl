@@ -585,6 +585,7 @@ final class MapboxMapController
   private void addHeatmapLayer(
   String layerId, 
   String sourceId, 
+  String belowLayerId,
   Float minZoom,
   Float maxZoom,
   Float minWeight,
@@ -658,7 +659,11 @@ final class MapboxMapController
 
 
     // Add the heatmap layer to the map
-    style.addLayer(layer);
+     if (belowLayerId != null) {
+      style.addLayerBelow(layer, belowLayerId);
+    } else {
+      style.addLayer(layer);
+    }
 }
 
 
@@ -1003,9 +1008,11 @@ final class MapboxMapController
           final Double minRadius = call.argument("minRadius");
           final Double maxRadius = call.argument("maxRadius");
           final Double maxVisibleZoom = call.argument("maxVisibleZoom");
+          final String belowLayerId = call.argument("belowLayerId");
 
-          addHeatmapLayer(layerId, 
+          addHeatmapLayer(layerId,
           sourceId,
+          belowLayerId,
           minZoom != null ? minZoom.floatValue() : null,
           maxZoom != null ? maxZoom.floatValue() : null,
           minWeight != null ? minWeight.floatValue() : null,

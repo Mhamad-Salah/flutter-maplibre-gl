@@ -698,7 +698,8 @@ class MethodChannelMaplibreGl extends MapLibreGlPlatform {
 
   @override
   Future<void> addHeatmapLayer(String layerId, String sourceId,
-      {double? minZoom,
+      {String? belowLayerId,
+      double? minZoom,
       double? maxZoom,
       double? minWeight,
       double? maxWeight,
@@ -721,6 +722,7 @@ class MethodChannelMaplibreGl extends MapLibreGlPlatform {
       'minOpacity': minOpacity,
       'maxOpacity': maxOpacity,
       'maxVisibleZoom': maxVisibleZoom,
+      'belowLayerId': belowLayerId,
     });
   }
 

@@ -126,6 +126,7 @@ abstract class MapLibreGlPlatform {
   Future<void> addHeatmapLayer(
     String layerId,
     String sourceId, {
+    String? belowLayerId,
     double? minZoom,
     double? maxZoom,
     double? minWeight,

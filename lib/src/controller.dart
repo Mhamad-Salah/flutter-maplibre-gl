@@ -433,6 +433,7 @@ class MaplibreMapController extends ChangeNotifier {
     double? minOpacity,
     double? maxOpacity,
     double? maxVisibleZoom,
+    String? belowLayerId,
   }) async {
     try {
       await _mapboxGlPlatform.addHeatmapLayer(
@@ -449,6 +450,7 @@ class MaplibreMapController extends ChangeNotifier {
         minOpacity: minOpacity,
         maxOpacity: maxOpacity,
         maxVisibleZoom: maxVisibleZoom,
+        belowLayerId: belowLayerId,
       );
     } catch (e) {
       print(e);
