@@ -1023,7 +1023,7 @@ final class MapboxMapController
           maxRadius != null ? maxRadius.floatValue() : null,
           minOpacity != null ? minOpacity.floatValue() : null,
           maxOpacity != null ? maxOpacity.floatValue() : null,
-          maxVisibleZoom != null ? maxVisibleZoom.floatValue() : null,
+          maxVisibleZoom != null ? maxVisibleZoom.floatValue() : null
           );
           break;
         }  
