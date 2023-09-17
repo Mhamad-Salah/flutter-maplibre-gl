@@ -445,6 +445,45 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
             case let .failure(error): result(error.flutterError)
             }
 
+        case "heatmapLayer#add":
+    guard let sourceId = call.argument("sourceId") as? String,
+          let layerId = call.argument("layerId") as? String else {
+        return
+    }
+
+    let minZoom = call.argument("minZoom") as? Double
+    let maxZoom = call.argument("maxZoom") as? Double
+    let minWeight = call.argument("minWeight") as? Double
+    let maxWeight = call.argument("maxWeight") as? Double
+    let minIntensity = call.argument("minIntensity") as? Double
+    let maxIntensity = call.argument("maxIntensity") as? Double
+    let minOpacity = call.argument("minOpacity") as? Double
+    let maxOpacity = call.argument("maxOpacity") as? Double
+    let minRadius = call.argument("minRadius") as? Double
+    let maxRadius = call.argument("maxRadius") as? Double
+    let maxVisibleZoom = call.argument("maxVisibleZoom") as? Double
+    let belowLayerId = call.argument("belowLayerId") as? String
+
+    addHeatmapLayer(
+        layerId: layerId,
+        sourceId: sourceId,
+        belowLayerId: belowLayerId,
+        minZoom: minZoom,
+        maxZoom: maxZoom,
+        minWeight: minWeight,
+        maxWeight: maxWeight,
+        minIntensity: minIntensity,
+        maxIntensity: maxIntensity,
+        minOpacity: minOpacity,
+        maxOpacity: maxOpacity,
+        minRadius: minRadius,
+        maxRadius: maxRadius,
+        maxVisibleZoom: maxVisibleZoom
+    )
+    result(nil)
+
+
+
         case "hillshadeLayer#add":
             guard let arguments = methodCall.arguments as? [String: Any] else { return }
             guard let sourceId = arguments["sourceId"] as? String else { return }
@@ -1309,6 +1348,68 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
             }
         }
     }
+
+    func addHeatmapLayer(
+    layerId: String,
+    sourceId: String,
+    belowLayerId: String?,
+    minZoom: Double?,
+    maxZoom: Double?,
+    minWeight: Double?,
+    maxWeight: Double?,
+    minIntensity: Double?,
+    maxIntensity: Double?,
+    minRadius: Double?,
+    maxRadius: Double?,
+    minOpacity: Double?,
+    maxOpacity: Double?,
+    maxVisibleZoom: Double?
+) {
+    let layer = MGLHeatmapStyleLayer(identifier: layerId, source: MGLSource(identifier: sourceId))
+    
+    layer.heatmapWeight = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
+                                        [
+                                            0: minWeight ?? 0,
+                                            6: maxWeight ?? 1
+                                        ])
+    
+    layer.heatmapIntensity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
+                                           [
+                                            minZoom ?? 10: minIntensity ?? 1,
+                                            maxZoom ?? 15: maxIntensity ?? 3
+                                           ])
+    
+    layer.heatmapColor = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:(heatmapDensity, 'linear', nil, %@)",
+                                       [
+                                        0: UIColor(red: 33/255.0, green: 102/255.0, blue: 172/255.0, alpha: 0),
+                                        0.2: UIColor(red: 103/255.0, green: 169/255.0, blue: 207/255.0, alpha: 1),
+                                        0.4: UIColor(red: 209/255.0, green: 229/255.0, blue: 240/255.0, alpha: 1),
+                                        0.6: UIColor(red: 253/255.0, green: 219/255.0, blue: 199/255.0, alpha: 1),
+                                        0.8: UIColor(red: 252/255.0, green: 163/255.0, blue: 100/255.0, alpha: 1),
+                                        1: UIColor(red: 255/255.0, green: 141/255.0, blue: 61/255.0, alpha: 1)
+                                       ])
+    
+    layer.heatmapRadius = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
+                                        [
+                                            minZoom ?? 10: minRadius ?? 30,
+                                            maxZoom ?? 15: maxRadius ?? 50
+                                        ])
+    
+    layer.heatmapOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)",
+                                         [
+                                            minZoom ?? 10: minOpacity ?? 1,
+                                            maxZoom ?? 15: maxOpacity ?? 0
+                                         ])
+    
+    layer.maximumZoomLevel = maxVisibleZoom ?? 13
+    
+    if let belowLayer = belowLayerId {
+        mapView.style?.insertLayer(layer, below: (mapView.style?.layer(withIdentifier: belowLayer))!)
+    } else {
+        mapView.style?.addLayer(layer)
+    }
+}
+
 
     func addRasterLayer(
         sourceId: String,
