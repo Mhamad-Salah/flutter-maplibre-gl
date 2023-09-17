@@ -26,19 +26,48 @@ class HeatmapState extends State {
 
   @override
   Widget build(BuildContext context) {
-    return MaplibreMap(
-      styleString: styleString,
-      dragEnabled: false,
-      myLocationEnabled: true,
-      onMapCreated: _onMapCreated,
-      // onMapClick: (point, latLong) =>
-      // print(point.toString() + latLong.toString()),
-      onStyleLoadedCallback: _onStyleLoadedCallback,
-      initialCameraPosition: CameraPosition(
-        target: center,
-        zoom: 11.0,
-      ),
-      annotationOrder: const [],
+    return Stack(
+      children: [
+        MaplibreMap(
+          styleString: styleString,
+          dragEnabled: false,
+          myLocationEnabled: true,
+          onMapCreated: _onMapCreated,
+          // onMapClick: (point, latLong) =>
+          // print(point.toString() + latLong.toString()),
+          onStyleLoadedCallback: _onStyleLoadedCallback,
+          initialCameraPosition: CameraPosition(
+            target: center,
+            zoom: 11.0,
+          ),
+          annotationOrder: const [],
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FilledButton(
+                onPressed: () => addHeatmap(),
+                child: Text(
+                  'On',
+                ),
+                style: FilledButton.styleFrom(backgroundColor: Colors.green),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              FilledButton(
+                onPressed: () => removeHeatmap(),
+                child: Text(
+                  'Off',
+                ),
+                style: FilledButton.styleFrom(backgroundColor: Colors.red),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -48,7 +77,18 @@ class HeatmapState extends State {
 
   void _onStyleLoadedCallback() async {
     await controller.addGeoJsonSource("points", _points);
+    await controller.addSymbolLayer(
+      "points",
+      "symbols",
+      SymbolLayerProperties(
+        iconImage: "custom-marker", //  "{type}-15",
+        iconSize: 2,
+        iconAllowOverlap: true,
+      ),
+    );
+  }
 
+  Future<void> addHeatmap() async {
     await controller.addHeatmapLayer(
       'heatmap',
       'points',
@@ -56,6 +96,10 @@ class HeatmapState extends State {
       minOpacity: 1,
       maxVisibleZoom: 15,
     );
+  }
+
+  Future<void> removeHeatmap() async {
+    await controller.removeLayer('heatmap');
   }
 }
 
