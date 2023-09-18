@@ -452,18 +452,18 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
         return
     }
 
-    let minZoom = arguments("minZoom") as? Double
-    let maxZoom = arguments("maxZoom") as? Double
-    let minWeight = arguments("minWeight") as? Double
-    let maxWeight = arguments("maxWeight") as? Double
-    let minIntensity = arguments("minIntensity") as? Double
-    let maxIntensity = arguments("maxIntensity") as? Double
-    let minOpacity = arguments("minOpacity") as? Double
-    let maxOpacity = arguments("maxOpacity") as? Double
-    let minRadius = arguments("minRadius") as? Double
-    let maxRadius = arguments("maxRadius") as? Double
-    let maxVisibleZoom = arguments("maxVisibleZoom") as? Double
-    let belowLayerId = arguments("belowLayerId") as? String
+    let minZoom = arguments["minZoom"] as? Double
+    let maxZoom = arguments["maxZoom"] as? Double
+    let minWeight = arguments["minWeight"] as? Double
+    let maxWeight = arguments["maxWeight"] as? Double
+    let minIntensity = arguments["minIntensity"] as? Double
+    let maxIntensity = arguments["maxIntensity"] as? Double
+    let minOpacity = arguments["minOpacity"] as? Double
+    let maxOpacity = arguments["maxOpacity"] as? Double
+    let minRadius = arguments["minRadius"] as? Double
+    let maxRadius = arguments["maxRadius"] as? Double
+    let maxVisibleZoom = arguments["maxVisibleZoom"] as? Double
+    let belowLayerId = arguments["belowLayerId"] as? String
 
     addHeatmapLayer(
         layerId: layerId,
