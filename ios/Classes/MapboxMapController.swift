@@ -1366,37 +1366,42 @@ func addHeatmapLayer(
     maxOpacity: Double?,
     maxVisibleZoom: Double?
 ) {
-    let layer = MGLHeatmapStyleLayer(identifier: layerId, source: MGLSource(identifier: sourceId))
-layer.heatmapWeight = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@, %@)",
-                                    0, Float(minWeight ?? 0),
-                                    6, Float(maxWeight ?? 1))
+    let source = style.source(withIdentifier: sourceId)
 
-layer.heatmapIntensity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@, %@)",
-                                    Float(minZoom ?? 10), Float(minIntensity ?? 1),
-                                    Float(maxZoom ?? 15), Float(maxIntensity ?? 3))
+    let heatmapLayer = MGLHeatmapStyleLayer(identifier: layerId, source: source)
 
-layer.heatmapColor = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($heatmapDensity, 'linear', nil, %@, %@, %@, %@, %@, %@, %@, %@, %@, %@)",
-                                0.0, UIColor(red: 33/255.0, green: 102/255.0, blue: 172/255.0, alpha: 0),
-                                0.2, UIColor(red: 103/255.0, green: 169/255.0, blue: 207/255.0, alpha: 1),
-                                0.4, UIColor(red: 209/255.0, green: 229/255.0, blue: 240/255.0, alpha: 1),
-                                0.6, UIColor(red: 253/255.0, green: 219/255.0, blue: 199/255.0, alpha: 1),
-                                0.8, UIColor(red: 252/255.0, green: 163/255.0, blue: 100/255.0, alpha: 1),
-                                1.0, UIColor(red: 255/255.0, green: 141/255.0, blue: 61/255.0, alpha: 1))
+    let colorDictionary: [NSNumber: UIColor] = [
+        0.0: .clear,
+        0.2: UIColor(red: 103/255.0, green: 169/255.0, blue: 207/255.0, alpha: 1.0),
+        0.4: UIColor(red: 209/255.0, green: 229/255.0, blue: 240/255.0, alpha: 1.0),
+        0.6: UIColor(red: 253/255.0, green: 219/255.0, blue: 199/255.0, alpha: 1.0),
+        0.8: UIColor(red: 252/255.0, green: 163/255.0, blue: 100/255.0, alpha: 1.0),
+        1.0: UIColor(red: 255/255.0, green: 141/255.0, blue: 61/255.0, alpha: 1.0),
+    ]
 
-layer.heatmapRadius = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@, %@)",
-                                    Float(minZoom ?? 10), Float(minRadius ?? 30),
-                                    Float(maxZoom ?? 15), Float(maxRadius ?? 50))
+    heatmapLayer.heatmapColor = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($heatmapDensity, 'linear', nil, %@)", colorDictionary)
 
-layer.heatmapOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@, %@)",
-                                    Float(minZoom ?? 10), Float(minOpacity ?? 1),
-                                    Float(maxZoom ?? 15), Float(maxOpacity ?? 0))
+    // Heatmap weight measures how much a single data point impacts the layer's appearance.
+    heatmapLayer.heatmapWeight = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:(mag, 'linear', nil, %@)", [0: Float(minWeight ?? 0), 6: Float(maxWeight ?? 1)])
 
-    layer.maximumZoomLevel = Float(maxVisibleZoom ?? 13)
-    if let belowLayer = belowLayerId {
-        mapView.style?.insertLayer(layer, below: (mapView.style?.layer(withIdentifier: belowLayer))!)
-    } else {
-        mapView.style?.addLayer(layer)
-    }
+    // Heatmap intensity multiplies the heatmap weight based on zoom level.
+    heatmapLayer.heatmapIntensity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [Float(minZoom ?? 10): Float(minIntensity ?? 1), Float(maxZoom ?? 15): Float(maxIntensity ?? 3)])
+
+    heatmapLayer.heatmapRadius = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [Float(minZoom ?? 10): Float(minRadius ?? 30), Float(maxZoom ?? 15): Float(maxRadius ?? 50)])
+    
+    // The heatmap layer should be visible up to zoom level 9.
+    heatmapLayer.heatmapOpacity = NSExpression(format: "mgl_step:from:stops:($zoomLevel, 'linear', %@)", 
+    [Float(minZoom ?? 10): Float(minOpacity ?? 1), Float(maxZoom ?? 15): Float(maxOpacity ?? 0)])
+
+    
+    heatmapLayer.maximumZoomLevel = Float(maxVisibleZoom ?? 13)
+
+    if let id = belowLayerId, let belowLayer = style.layer(withIdentifier: id) {
+                style.insertLayer(heatmapLayer, below: belowLayer)
+        } else {
+            style.addLayer(heatmapLayer)
+        }
+        
 }
 
 
