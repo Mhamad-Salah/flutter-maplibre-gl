@@ -446,23 +446,24 @@ class MapboxMapController: NSObject, FlutterPlatformView, MGLMapViewDelegate, Ma
             }
 
         case "heatmapLayer#add":
-    guard let sourceId = call.argument("sourceId") as? String,
-          let layerId = call.argument("layerId") as? String else {
+            guard let arguments = methodCall.arguments as? [String: Any] else { return }
+    guard let sourceId = arguments("sourceId") as? String,
+          let layerId = arguments("layerId") as? String else {
         return
     }
 
-    let minZoom = call.argument("minZoom") as? Double
-    let maxZoom = call.argument("maxZoom") as? Double
-    let minWeight = call.argument("minWeight") as? Double
-    let maxWeight = call.argument("maxWeight") as? Double
-    let minIntensity = call.argument("minIntensity") as? Double
-    let maxIntensity = call.argument("maxIntensity") as? Double
-    let minOpacity = call.argument("minOpacity") as? Double
-    let maxOpacity = call.argument("maxOpacity") as? Double
-    let minRadius = call.argument("minRadius") as? Double
-    let maxRadius = call.argument("maxRadius") as? Double
-    let maxVisibleZoom = call.argument("maxVisibleZoom") as? Double
-    let belowLayerId = call.argument("belowLayerId") as? String
+    let minZoom = arguments("minZoom") as? Double
+    let maxZoom = arguments("maxZoom") as? Double
+    let minWeight = arguments("minWeight") as? Double
+    let maxWeight = arguments("maxWeight") as? Double
+    let minIntensity = arguments("minIntensity") as? Double
+    let maxIntensity = arguments("maxIntensity") as? Double
+    let minOpacity = arguments("minOpacity") as? Double
+    let maxOpacity = arguments("maxOpacity") as? Double
+    let minRadius = arguments("minRadius") as? Double
+    let maxRadius = arguments("maxRadius") as? Double
+    let maxVisibleZoom = arguments("maxVisibleZoom") as? Double
+    let belowLayerId = arguments("belowLayerId") as? String
 
     addHeatmapLayer(
         layerId: layerId,
