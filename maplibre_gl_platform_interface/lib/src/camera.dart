@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -69,18 +70,19 @@ class CameraPosition {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(covariant CameraPosition other) {
     if (identical(this, other)) return true;
-    if (runtimeType != other.runtimeType) return false;
-    final CameraPosition typedOther = other;
-    return bearing == typedOther.bearing &&
-        target == typedOther.target &&
-        tilt == typedOther.tilt &&
-        zoom == typedOther.zoom;
+
+    return other.bearing == bearing &&
+        other.target == target &&
+        other.tilt == tilt &&
+        other.zoom == zoom;
   }
 
   @override
-  int get hashCode => Object.hash(bearing, target, tilt, zoom);
+  int get hashCode {
+    return bearing.hashCode ^ target.hashCode ^ tilt.hashCode ^ zoom.hashCode;
+  }
 
   @override
   String toString() =>

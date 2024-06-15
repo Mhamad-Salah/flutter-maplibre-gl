@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -60,11 +61,10 @@ class CameraTargetBounds {
   dynamic toJson() => <dynamic>[bounds?.toList()];
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(covariant CameraTargetBounds other) {
     if (identical(this, other)) return true;
-    if (runtimeType != other.runtimeType) return false;
-    final CameraTargetBounds typedOther = other;
-    return bounds == typedOther.bounds;
+
+    return other.bounds == bounds;
   }
 
   @override
@@ -97,15 +97,14 @@ class MinMaxZoomPreference {
   dynamic toJson() => <dynamic>[minZoom, maxZoom];
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(covariant MinMaxZoomPreference other) {
     if (identical(this, other)) return true;
-    if (runtimeType != other.runtimeType) return false;
-    final MinMaxZoomPreference typedOther = other;
-    return minZoom == typedOther.minZoom && maxZoom == typedOther.maxZoom;
+
+    return other.minZoom == minZoom && other.maxZoom == maxZoom;
   }
 
   @override
-  int get hashCode => Object.hash(minZoom, maxZoom);
+  int get hashCode => minZoom.hashCode ^ maxZoom.hashCode;
 
   @override
   String toString() {
