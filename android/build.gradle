@@ -22,33 +22,33 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-
     namespace "com.mapbox.mapboxgl"
-    compileSdkVersion 33
-    ndkVersion "20.1.5948944"
+    compileSdk 35
+    ndkVersion "29.0.14033849 rc4"
 
     defaultConfig {
         minSdkVersion 20
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
+
     lintOptions {
         disable 'InvalidPackage'
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+
     dependencies {
         implementation 'org.maplibre.gl:android-sdk:9.6.0'
         implementation 'org.maplibre.gl:android-plugin-annotation-v9:1.0.0'
         implementation 'org.maplibre.gl:android-plugin-localization-v9:1.0.0'
         implementation 'org.maplibre.gl:android-plugin-offline-v9:1.0.0'
         implementation 'com.squareup.okhttp3:okhttp:4.9.3'
-
     }
+
     compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
+
+// Apply Kotlin plugin if you need Kotlin support
+// apply plugin: 'kotlin-android'
