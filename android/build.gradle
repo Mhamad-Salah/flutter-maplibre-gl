@@ -24,7 +24,7 @@ apply plugin: 'com.android.library'
 android {
     namespace "com.mapbox.mapboxgl"
     compileSdk 35
-    ndkVersion = "29.0.14033849 rc4"
+    ndkVersion = "29.0.14033849"
 
     defaultConfig {
         minSdkVersion 20
